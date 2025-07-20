@@ -13,80 +13,85 @@ public abstract class SptLoggerBase<T> : ISptLogger<T>
     );
 
     public void LogWithColor(
-        string data,
+        StringOrFormattableString data,
         LogTextColor? textColor = null,
         LogBackgroundColor? backgroundColor = null,
         Exception? ex = null
     )
     {
-        LogWithColorInternal(data, textColor, backgroundColor, ex);
+        LogWithColorInternal(
+            data.StringValue ?? data.FormattableValue!.Format,
+            textColor,
+            backgroundColor,
+            ex
+        );
     }
 
     protected abstract void SuccessInternal(string data, Exception? ex = null);
 
-    public void Success(string data, Exception? ex = null)
+    public void Success(StringOrFormattableString data, Exception? ex = null)
     {
-        SuccessInternal(data, ex);
+        SuccessInternal(data.StringValue ?? data.FormattableValue!.Format, ex);
     }
 
     protected abstract void ErrorInternal(string data, Exception? ex = null);
 
-    public void Error(string data, Exception? ex = null)
+    public void Error(StringOrFormattableString data, Exception? ex = null)
     {
         if (!IsLogEnabled(LogLevel.Error))
         {
             return;
         }
 
-        ErrorInternal(data, ex);
+        ErrorInternal(data.StringValue ?? data.FormattableValue!.Format, ex);
     }
 
     protected abstract void WarningInternal(string data, Exception? ex = null);
 
-    public void Warning(string data, Exception? ex = null)
+    public void Warning(StringOrFormattableString data, Exception? ex = null)
     {
         if (!IsLogEnabled(LogLevel.Warn))
         {
             return;
         }
 
-        WarningInternal(data, ex);
+        WarningInternal(data.StringValue ?? data.FormattableValue!.Format, ex);
     }
 
     protected abstract void InfoInternal(string data, Exception? ex = null);
 
-    public void Info(string data, Exception? ex = null)
+    public void Info(StringOrFormattableString data, Exception? ex = null)
     {
         if (!IsLogEnabled(LogLevel.Info))
         {
             return;
         }
 
-        InfoInternal(data, ex);
+        InfoInternal(data.StringValue ?? data.FormattableValue!.Format, ex);
     }
 
     protected abstract void DebugInternal(string data, Exception? ex = null);
 
-    public void Debug(string data, Exception? ex = null)
+    public void Debug(StringOrFormattableString data, Exception? ex = null)
     {
         if (!IsLogEnabled(LogLevel.Debug))
         {
             return;
         }
 
-        DebugInternal(data, ex);
+        DebugInternal(data.StringValue ?? data.FormattableValue!.Format, ex);
     }
 
     protected abstract void CriticalInternal(string data, Exception? ex = null);
 
-    public void Critical(string data, Exception? ex = null)
+    public void Critical(StringOrFormattableString data, Exception? ex = null)
     {
         if (!IsLogEnabled(LogLevel.Fatal))
         {
             return;
         }
 
-        CriticalInternal(data, ex);
+        CriticalInternal(data.StringValue ?? data.FormattableValue!.Format, ex);
     }
 
     protected abstract void LogInternal(
@@ -99,7 +104,7 @@ public abstract class SptLoggerBase<T> : ISptLogger<T>
 
     public void Log(
         LogLevel level,
-        string data,
+        StringOrFormattableString data,
         LogTextColor? textColor = null,
         LogBackgroundColor? backgroundColor = null,
         Exception? ex = null
@@ -109,7 +114,13 @@ public abstract class SptLoggerBase<T> : ISptLogger<T>
         {
             return;
         }
-        LogInternal(level, data, textColor, backgroundColor, ex);
+        LogInternal(
+            level,
+            data.StringValue ?? data.FormattableValue!.Format,
+            textColor,
+            backgroundColor,
+            ex
+        );
     }
 
     protected abstract bool IsLogEnabled(LogLevel level);
